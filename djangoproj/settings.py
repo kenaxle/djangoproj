@@ -100,6 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+TEST_RUNNER = 'teamcity.django.TeamcityDjangoRunner'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
