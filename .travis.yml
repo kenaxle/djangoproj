@@ -15,7 +15,7 @@ env:
 
 install:
 #  - pip install -r requirements.txt
-  - pip install -q Django==$DJANGO --use-mirrors
+  - pip install -q Django==$DJANGO
 #  - pip install psycopg2 --quiet
 
 before_script:
