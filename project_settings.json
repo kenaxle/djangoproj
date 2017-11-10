@@ -1,0 +1,31 @@
+{
+    "project_name": "djangoproj",
+    "vcs_type": "git",
+    "git_repository": "origin",
+    "stages": {
+        "stable": {
+            "name": "stable",
+            "host": "srv-jenkins-01",
+            "user": "kena",
+            "vcs_branch": "master",
+            "venv_directory": "",
+            "requirements_file": "",
+            "code_src_directory": "/home/ubuntu/work/djangoproj",
+            "restart_command": "sudo service apache2 restart"
+        },
+        "development": {
+            "name": "stage",
+            "host": "srv-dev-01",
+            "user": "kena",
+            "vcs_branch": "development",
+            "venv_directory": "",
+            "requirements_file": "",
+            "code_src_directory": "/home/ubuntu/work/djangoproj",
+            "restart_command": "sudo service apache2 restart"
+        }
+    },
+    "local": {
+        "code_src_directory": "~/PycharmProjects/djangoproj",
+        "venv_python_executable": ""
+    }
+}
