@@ -101,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-TEST_RUNNER = 'teamcity.django.TeamcityDjangoRunner'
 
 
 # Internationalization
