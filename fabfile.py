@@ -58,7 +58,7 @@ def deploy():
         test_result = run("test -d {}" .format(srv_code_dir))
         if test_result.failed:
             run("mkdir {}" .format(srv_code_dir))
-            run("git clone -b {} https://github.com/{} {}" .format(rep, branch, srv_code_dir))
+            run("git clone -b {} https://github.com/{} {}" .format( branch, rep, srv_code_dir))
         # else:
         #     with cd(srv_code_dir):
         #         run("git commit -am 'commit server changes'")
@@ -72,7 +72,7 @@ def launch():
     with cd(srv_code_dir):
         run("python ./manage.py makemigrations")
         run("python ./manage.py migrate")
-        run("python ./manage.py runserver 0.0.0.0:8080 &")
+        run("python ./manage.py runserver 0.0.0.0:8080")
 
 
 
