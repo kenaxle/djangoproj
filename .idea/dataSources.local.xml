@@ -6,5 +6,20 @@
       <auth-required>false</auth-required>
       <first-sync>true</first-sync>
     </data-source>
+    <data-source name="db.sqlite3" uuid="01dd6e79-985a-4d3a-9c22-e074f889418a">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
+      <secret-storage>master_key</secret-storage>
+      <auth-required>false</auth-required>
+      <first-sync>true</first-sync>
+      <introspection-schemas>*:@</introspection-schemas>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <proxy-host>srv-dev-01</proxy-host>
+        <proxy-port>22</proxy-port>
+        <secret-storage>master_key</secret-storage>
+        <user>kena</user>
+        <use-password>true</use-password>
+      </ssh-properties>
+    </data-source>
   </component>
 </project>

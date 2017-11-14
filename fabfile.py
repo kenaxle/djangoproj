@@ -46,9 +46,8 @@ def commit(message='commit'):
 
 
 def push():
-    rep = 'kenaxle/djangoproj'
     branch = 'development'
-    local("git push {} {}" .format(rep, branch))
+    local("git push origin {}" .format(branch))
 
 
 def deploy():
@@ -56,9 +55,13 @@ def deploy():
     branch = 'development'
     srv_code_dir = '/home/kena/djangoproj'
     with settings(warn_only=True):
-        if run("test -d {}" .format(srv_code_dir)).failed:
+        test_result = run("test -d {}" .format(srv_code_dir))
+        if test_result.failed:
             run("mkdir {}" .format(srv_code_dir))
             run("git clone -b {} https://github.com/{} {}" .format(rep, branch, srv_code_dir))
+        else:
+            with cd(srv_code_dir):
+                run("git commit -am 'commit server changes'")
     with cd(srv_code_dir):
         run("git pull")
         run("touch app.wsgi")
@@ -69,7 +72,7 @@ def launch():
     with cd(srv_code_dir):
         run("python ./manage.py makemigrations")
         run("python ./manage.py migrate")
-        run("python ./manage.py runserver 0.0.0.0:8080")
+        run("python ./manage.py runserver 0.0.0.0:8080 &")
 
 
 
