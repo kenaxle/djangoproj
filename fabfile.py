@@ -1,12 +1,10 @@
-import json
-from datetime import datetime
 
-from fabric.api import *
+from __future__ import with_statement
+from fabric.api import local, settings, abort
+from fabric.contrib.console import confirm
 from fabric.context_managers import settings
-from fabric.operations import require
 from fabric.utils import fastprint
-#from fabvenv import virtualenv
-from unipath import Path
+
 
 #SETTINGS_FILE_PATH = Path(__file__).ancestor(1).child('project_settings.json')
 
@@ -18,7 +16,7 @@ from unipath import Path
 #     'Type \'yes\' to continue, or \'no\' to cancel: ': 'yes'
 # }
 
-@task
+#@task
 def help():
     message = '''
     Remote updating application with fabric.
@@ -33,22 +31,25 @@ def help():
     '''
     fastprint(message)
 
-@task()
+#@task()
 def test():
-    local("./manage.py test djangoproj")
+    with settings(warn_only=True):
+        result = local("./manage.py test djangoproj")
+    if result.failed and not confirm("Tests failed. Continue anyway?"):
+        abort("Aborting at the user request")
 
 
-@task()
+#@task()
 def commit():
     local("git add -p && git commit")
 
 
-@task()
+#@task()
 def deploy():
     local("git push")
 
 
-@task()
+#@task()
 def prepare_deploy():
     test()
     commit()
