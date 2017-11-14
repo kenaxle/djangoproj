@@ -34,10 +34,28 @@ def help():
     fastprint(message)
 
 @task()
-def prepare_deploy():
+def test():
     local("./manage.py test djangoproj")
+
+
+@task()
+def commit():
     local("git add -p && git commit")
+
+
+@task()
+def deploy():
     local("git push")
+
+
+@task()
+def prepare_deploy():
+    test()
+    commit()
+    deploy()
+
+
+
 
 
 # def set_stage(stage_name='development'):
