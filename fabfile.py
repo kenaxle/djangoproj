@@ -1,6 +1,6 @@
 
 from __future__ import with_statement
-from fabric.api import local, settings, abort
+from fabric.api import *
 from fabric.contrib.console import confirm
 from fabric.context_managers import settings
 from fabric.utils import fastprint
@@ -15,6 +15,8 @@ from fabric.utils import fastprint
 # env.prompts = {
 #     'Type \'yes\' to continue, or \'no\' to cancel: ': 'yes'
 # }
+
+env.hosts = ['kena@srv-dev-01']
 
 #@task
 def help():
@@ -31,7 +33,7 @@ def help():
     '''
     fastprint(message)
 
-#@task()
+
 def test():
     with settings(warn_only=True):
         result = local("./manage.py test djangoproj")
@@ -39,21 +41,35 @@ def test():
         abort("Aborting at the user request")
 
 
-#@task()
-def commit():
-    local("git add -p && git commit")
+def commit(message='commit'):
+    local("git add && git commit -am {}" .format(message))
 
 
-#@task()
+def push():
+    rep = 'kenaxle/djangoproj'
+    branch = 'development'
+    local("git push {} {}" .format(rep, branch))
+
+
 def deploy():
-    local("git push")
+    rep = 'kenaxle/djangoproj'
+    branch = 'development'
+    srv_code_dir = '/home/kena/djangoproj'
+    with settings(warn_only=True):
+        if run("test -d {}" .format(srv_code_dir)).failed:
+            run("mkdir {}" .format(srv_code_dir))
+            run("git clone -b {} https://github.com/{} {}" .format(rep, branch, srv_code_dir))
+    with cd(srv_code_dir):
+        run("git pull")
+        run("touch app.wsgi")
 
 
-#@task()
-def prepare_deploy():
-    test()
-    commit()
-    deploy()
+def launch():
+    srv_code_dir = '/home/kena/djangoproj'
+    with cd(srv_code_dir):
+        run("python ./manage.py makemigrations")
+        run("python ./manage.py migrate")
+        run("python ./manage.py runserver 0.0.0.0:8080")
 
 
 
