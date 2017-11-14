@@ -59,11 +59,11 @@ def deploy():
         if test_result.failed:
             run("mkdir {}" .format(srv_code_dir))
             run("git clone -b {} https://github.com/{} {}" .format(rep, branch, srv_code_dir))
-        else:
-            with cd(srv_code_dir):
-                run("git commit -am 'commit server changes'")
+        # else:
+        #     with cd(srv_code_dir):
+        #         run("git commit -am 'commit server changes'")
     with cd(srv_code_dir):
-        run("git pull")
+        run("git pull ")
         run("touch app.wsgi")
 
 
