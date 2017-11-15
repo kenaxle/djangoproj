@@ -1,0 +1,2 @@
+fabric==1.14
+Django==1.11

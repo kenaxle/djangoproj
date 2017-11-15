@@ -3,24 +3,24 @@
     "vcs_type": "git",
     "git_repository": "origin",
     "stages": {
-        "stable": {
-            "name": "stable",
+        "master": {
+            "name": "master",
             "host": "srv-jenkins-01",
             "user": "kena",
             "vcs_branch": "master",
-            "venv_directory": "",
-            "requirements_file": "",
-            "code_src_directory": "/home/ubuntu/work/djangoproj",
+            "venv_directory": "/home/kena/virtualenv",
+            "requirements_file": "requirements.txt",
+            "code_src_directory": "/home/kena/djangoproj",
             "restart_command": "sudo service apache2 restart"
         },
         "development": {
-            "name": "stage",
+            "name": "development",
             "host": "srv-dev-01",
             "user": "kena",
             "vcs_branch": "development",
-            "venv_directory": "",
-            "requirements_file": "",
-            "code_src_directory": "/home/ubuntu/work/djangoproj",
+            "venv_directory": "/home/kena/virtualenv",
+            "requirements_file": "requirements.txt",
+            "code_src_directory": "/home/kena/djangoproj",
             "restart_command": "sudo service apache2 restart"
         }
     },
