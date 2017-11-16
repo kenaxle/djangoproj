@@ -1,7 +1,7 @@
 {
     "project_name": "djangoproj",
     "vcs_type": "git",
-    "git_repository": "origin",
+    "git_repository": "kenaxle/djangoproj",
     "stages": {
         "master": {
             "name": "master",
@@ -21,7 +21,7 @@
             "venv_directory": "/home/kena/virtualenv",
             "requirements_file": "requirements.txt",
             "code_src_directory": "/home/kena/djangoproj",
-            "restart_command": "sudo service apache2 restart"
+            "restart_command": "sudo service apache2 restart &"
         }
     },
     "local": {

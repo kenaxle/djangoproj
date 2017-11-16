@@ -20,7 +20,7 @@ env.prompts = {
     'Type \'yes\' to continue, or \'no\' to cancel: ': 'yes'
 }
 
-
+#sets the stage as either development or master
 def set_stage(stage_name='development'):
     stages = project_settings['stages'].keys()
     if stage_name not in stages:
@@ -29,7 +29,7 @@ def set_stage(stage_name='development'):
         )
     env.stage = stage_name
 
-
+# insert the stage settings into the env
 def set_project_settings():
     stage_settings = project_settings['stages'][env.stage]
     if not all(project_settings.itervalues()):
@@ -50,6 +50,9 @@ def development():
     set_project_settings()
 
 
+# deployment task. the tasks will first run tests then deploy the app
+# if the tests are successful. During the deployment the repository
+# may be staged on the server if it is not there.
 @task
 def deploy(tests='no'):
     """
@@ -61,16 +64,22 @@ def deploy(tests='no'):
     env.vcs_type = project_settings['vcs_type']
     env.user = env.settings['user']
     env.host_string = env.settings['host']
-
     with hide('stderr', 'stdout', 'warnings', 'running'):
         if tests == 'yes':
             with lcd(project_settings['local']['code_src_directory']):
                 run_tests()
+        dir_exists = run("test -d {}" .format(env.settings['code_src_directory']))
+        if dir_exists.failed:
+            run("mkdir {}" .format(env.settings['code_src_directory']))
+            run("git clone -b {} https://github.com/{} {}" .format(
+                env.settings['vcs_branch'],
+                project_settings['git_repository'],
+                env.settings['code_src_directory']))
         with cd(env.settings['code_src_directory']):
             pull_repository()
         with virtualenv(env.settings['venv_directory']):
             with cd(env.settings['code_src_directory']):
-                collect_static()
+                #collect_static()
                 install_requirements()
                 migrate_models()
         restart_application()
@@ -81,6 +90,8 @@ def commit(message='commit'):
     local("git add && git commit -am {}" .format(message))
 
 
+# pushes the repository to the appropriate server based
+# on the stage that was set
 @task()
 def push():
     require('stage', provided_by=(stable, development))
@@ -89,6 +100,7 @@ def push():
     local("git push origin {}" .format(branch))
 
 
+# wrapper to print messages before and after each task
 def print_status(description):
     def print_status_decorator(fn):
         def print_status_wrapper():
@@ -141,8 +153,7 @@ def pull_repository():
 
 @print_status('pulling git repository')
 def pull_git_repository():
-    command = 'git pull {} {}'.format(
-        "origin", #env.project_settings.get('git_repository'),
+    command = 'git pull origin {}'.format(
         env.settings.get('vcs_branch')
     )
     run(command)
@@ -161,6 +172,7 @@ def install_requirements():
 
 @print_status('migrating models')
 def migrate_models():
+    run('python manage.py makemigrations')
     run('python manage.py migrate')
 
 
@@ -180,10 +192,10 @@ def help():
 
     Usage example:
 
-    Deploy to development server:
+    to deploy to the development server:
     fab development deploy
 
     Deploy to production server with no tests:
-    fab stable deploy:tests=no
+    fab master deploy:tests=no
     '''
     fastprint(message)
